@@ -1,16 +1,86 @@
-# React + Vite
+# DogLog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ещё не очень готовая, но *уникальная в своём роде* система учёта служебных собак.
 
-Currently, two official plugins are available:
+## Технологический стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Фронтенд
 
-## React Compiler
+- **React** v19.2.0
+- **Vite** v7.3.1
+- **react-router-dom** v7.13.1
+- **Ant Design** v6.3.1
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Бэкенд
 
-## Expanding the ESLint configuration
+- **FastAPI** 
+- **Uvicorn**
+- **SQLAlchemy**
+- **PostgreSQL**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Функции
+
+На данный момент реализованы:
+
+- JWT-авторизация
+- to be continued...
+
+# Установка
+
+Если совсем заняться нечем, можно попробовать установить это на компьютер. Вдруг заработает?
+
+## Требования
+-
+
+
+## Windows
+
+```powershell
+# 1. Клонируем репозиторий
+git clone https://github.com/nevodlol/doglog.git
+cd doglog
+
+# 2. Установим зависимости
+cd frontend
+npm install
+cd ../backend
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3. Настроим переменные окружения
+Copy-Item .env.example .env
+# Подставьте свои значения в полученном файле .env
+
+# 4. ЗАПУСК!!!
+npm run dev:all
+```
+
+## Linux/Mac
+
+```bash
+# 1. Клонируем репозиторий
+git clone https://github.com/nevodlol/doglog.git
+cd doglog
+
+# 2. Установим зависимости
+cd frontend
+npm install
+cd ../backend
+python -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3. Настроим переменные окружения
+cp .env.example .env
+# Подставьте свои значения в полученном файле .env
+
+# 4. ЗАПУСК!!!
+npm run dev:all
+```
+
+# Лицензия
+
+Распространяется по лицензии MIT
