@@ -30,17 +30,19 @@
 Если совсем заняться нечем, можно попробовать установить это на компьютер. Вдруг заработает?
 
 ## Требования
--
+- [Node.js](https://nodejs.org/en/download/current)
+- npm (тоже по ссылке выше устанавливается)
+- [Python](https://www.python.org/downloads)
 
 
 ## Windows
 
 ```powershell
-# 1. Клонируем репозиторий
+# 1. Клонируйте репозиторий
 git clone https://github.com/nevodlol/doglog.git
 cd doglog
 
-# 2. Установим зависимости
+# 2. Установте зависимости
 cd frontend
 npm install
 cd ../backend
@@ -49,7 +51,7 @@ venv\Scripts\Activate.ps1
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 3. Настроим переменные окружения
+# 3. Настройте переменные окружения
 Copy-Item .env.example .env
 # Подставьте свои значения в полученном файле .env
 
@@ -60,7 +62,7 @@ npm run dev:all
 ## Linux/Mac
 
 ```bash
-# 1. Клонируем репозиторий
+# 1. Клонируйте репозиторий
 git clone https://github.com/nevodlol/doglog.git
 cd doglog
 
@@ -78,9 +80,10 @@ cp .env.example .env
 # Подставьте свои значения в полученном файле .env
 
 # 4. ЗАПУСК!!!
+cd ..
 npm run dev:all
 ```
 
 # Лицензия
 
-ничо не берите отсюда пж!!!! запрещаю отказ.
+абсолютно все права защищены и охраняются по законам тёмных двадцатых. 
