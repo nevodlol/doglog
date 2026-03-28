@@ -13,7 +13,7 @@ function Sidebar() {
       </Menu.Item>
 
       <Menu.Item key="3">
-        <Link to="/dashboard/health">Вет. мероприятия</Link>
+        <Link to="/dashboard/health">Здоровье</Link>
       </Menu.Item>
 
       <Menu.Item>
