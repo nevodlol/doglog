@@ -40,25 +40,15 @@ function Sidebar() {
       key: "/dashboard/documents",
       icon: <FileTextOutlined />,
       label: <NavLink to="/dashboard/documents">Документы</NavLink>,
-    }
+    },
   ];
 
-  const logoutItem = {
-    key: "logout",
-    icon: <LogoutOutlined />,
-    label: "Выйти",
-    onClick: () => {
-      localStorage.removeItem("token");
-      navigate("/login");
-    },
-  };
-
   return (
-    <Sider style={siderStyle} width={200}>
+    <Sider style={siderStyle} width={250}>
       <div
         style={{
           color: "white",
-          fontSize: 25,
+          fontSize: 30,
           padding: 20,
           fontFamily: "PT Mono, Consolas, monospace",
         }}
@@ -70,16 +60,26 @@ function Sidebar() {
         theme="dark"
         mode="inline"
         selectedKeys={[location.pathname]}
-        items={items}
-        style={{ flex: 1 }}
-      />
+        style={{ flex: 1, display: "flex", flexDirection: "column" }}
+      >
+        {items.map(item => (
+          <Menu.Item key={item.key} icon={item.icon}>
+            {item.label}
+          </Menu.Item>
+        ))}
 
-      <Menu
-        theme="dark"
-        mode="inline"
-        items={[logoutItem]}
-        style={{ marginTop: "auto" }} // прижимаем к низу
-      />
+        <Menu.Item
+          key="logout"
+          icon={<LogoutOutlined />}
+          style={{ marginTop: "auto" }}
+          onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/login");
+          }}
+        >
+          Выйти
+        </Menu.Item>
+      </Menu>
     </Sider>
   );
 }

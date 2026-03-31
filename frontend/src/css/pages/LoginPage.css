@@ -1,4 +1,6 @@
-body {
+.login-page {
+    display: flex;
+    height: 100vh;
     background: linear-gradient(-137.423deg, #FFFFFF 0%, #3471C6 100%);
     font-family: "PT Mono", Consolas, monospace;
 }
@@ -11,11 +13,6 @@ h1 {
 p {
     font-size: 25px;
     margin: 40px 0 0 0;
-}
-
-.login-page {
-    display: flex;
-    height: 100vh;
 }
 
 .left {
