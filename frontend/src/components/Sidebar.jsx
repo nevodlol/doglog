@@ -14,6 +14,7 @@ const siderStyle = {
   display: "flex",
   flexDirection: "column",
   height: "100vh",
+  position: "fixed",
 };
 
 function Sidebar() {

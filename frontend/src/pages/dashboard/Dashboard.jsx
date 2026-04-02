@@ -17,7 +17,7 @@ function Dashboard() {
     <Row gutter={[16, 16]}>
       {dogs.map((dog) => (
         <Col key={dog.id}>
-          <Card title={dog.name} style={{ width: 300 }}>
+          <Card title={dog.name} style={{ width: 290, height: 150 }}>
             Карточка собаки
           </Card>
         </Col>
@@ -28,7 +28,7 @@ function Dashboard() {
           hoverable
           onClick={addDog}
           style={{
-            width: 300,
+            width: 290,
             height: 150,
             display: "flex",
             justifyContent: "center",
