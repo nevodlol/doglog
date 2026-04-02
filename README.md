@@ -56,6 +56,7 @@ Copy-Item .env.example .env
 # Подставьте свои значения в полученном файле .env
 
 # 4. ЗАПУСК!!!
+cd ..
 npm run dev:all
 ```
 
