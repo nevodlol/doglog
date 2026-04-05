@@ -18,13 +18,6 @@
 - **SQLAlchemy**
 - **PostgreSQL**
 
-## Функции
-
-На данный момент реализованы:
-
-- Псевдоавторизация
-- to be continued...
-
 # Установка
 
 Если совсем заняться нечем, можно попробовать установить это на компьютер. Вдруг заработает?
@@ -35,14 +28,14 @@
 - [Python](https://www.python.org/downloads)
 
 
-## Windows
+## Windows (Powershell)
 
 ```powershell
 # 1. Клонируйте репозиторий
 git clone https://github.com/nevodlol/doglog.git
 cd doglog
 
-# 2. Установте зависимости
+# 2. Установите зависимости
 cd frontend
 npm install
 cd ../backend
@@ -67,7 +60,7 @@ npm run dev:all
 git clone https://github.com/nevodlol/doglog.git
 cd doglog
 
-# 2. Установим зависимости
+# 2. Установите зависимости
 cd frontend
 npm install
 cd ../backend
@@ -76,7 +69,7 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 3. Настроим переменные окружения
+# 3. Настройте переменные окружения
 cp .env.example .env
 # Подставьте свои значения в полученном файле .env
 

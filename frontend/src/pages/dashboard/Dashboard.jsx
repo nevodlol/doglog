@@ -1,23 +1,18 @@
 import { useState } from "react";
-import { Row, Col, Card, Modal, Input } from "antd";
+import { Row, Col, Card } from "antd";
+import AddDogModal from "../../components/AddDogModal";
 
 function Dashboard() {
   const [dogs, setDogs] = useState([]);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [breed, setBreed] = useState("");
-  const [weight, setWeight] = useState("");
-  const [birthdate, setBirthdate] = useState("");
 
-  const addDog = () => {
+  const handleAddDog = (dogData) => {
     const newDog = {
       id: Date.now(),
-      name: name,
+      ...dogData
     };
-
     setDogs([...dogs, newDog]);
     setOpen(false);
-    setName("");
   };
 
   return (
@@ -25,7 +20,10 @@ function Dashboard() {
       <Row gutter={[16, 16]}>
         {dogs.map((dog) => (
           <Col key={dog.id}>
-            <Card title={dog.name} style={{ width: 290, height: 150 }} />
+            <Card title={dog.name} style={{ width: 290, height: 150 }}>
+              {dog.breed && <div>{dog.breed}</div>}
+              {dog.birthdate && <div>{dog.birthdate}</div>}
+            </Card>
           </Col>
         ))}
 
@@ -53,40 +51,11 @@ function Dashboard() {
         </Col>
       </Row>
 
-      <Modal
-        title="Новая собака"
+      <AddDogModal
         open={open}
-        onOk={addDog}
         onCancel={() => setOpen(false)}
-      >
-        <Input
-          placeholder="Имя собаки"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ marginBottom: 10, marginTop: 21 }}
-        />
-
-        <Input
-          placeholder="Порода"
-          value={breed}
-          onChange={(e) => setBreed(e.target.value)}
-          style={{ marginBottom: 10 }}
-        />
-
-        <Input
-          placeholder="Вес"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-          style={{ marginBottom: 10 }}
-        />
-
-        <Input
-          placeholder="Дата рождения"
-          value={birthdate}
-          onChange={(e) => setBirthdate(e.target.value)}
-          style={{ marginBottom: 10 }}
-        />
-      </Modal>
+        onSave={handleAddDog}
+      />
     </>
   );
 }
