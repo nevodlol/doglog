@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, DatePicker, Row, Col, Upload, message } from "antd";
+import { Modal, Form, Input, DatePicker, Row, Col, Upload, Select, message } from "antd";
 import { InboxOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Dragger } = Upload;
@@ -21,8 +21,11 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
 
       onSave({
         name: values.name,
-        breed: values.breed,
+        gender: values.gender,
         birthdate: values.birthdate ? values.birthdate.format('DD.MM.YYYY') : '',
+        breed: values.breed,
+        color: values.color,
+        chip: values.chip,
         photo: fileList[0]?.originFileObj || null
       });
 
@@ -45,12 +48,12 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
     beforeUpload: (file) => {
       const isImage = file.type.startsWith('image/');
       if (!isImage) {
-        message.error('можно загружать только картинки');
+        message.error('Можно загружать только картинки');
         return Upload.LIST_IGNORE;
       }
       const isLt5M = file.size / 1024 / 1024 < 10;
       if (!isLt5M) {
-        message.error('Размер файла не должен превышать 10 мб');
+        message.error('Размер файла не должен превышать 10 Мб');
         return Upload.LIST_IGNORE;
       }
       return false;
@@ -81,7 +84,7 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
                   Перетащите фото или выберите файл
                 </p>
                 <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
-                  jpg, png до 5 мб
+                  изображения до 10 Мб
                 </p>
               </>
             ) : (
@@ -113,7 +116,7 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
         <Col span={14}>
           <Form form={form} layout="vertical">
             <Form.Item
-              label="кличка"
+              label="Кличка"
               name="name"
               rules={[{ required: true, message: 'Введите кличку' }]}
             >
@@ -121,7 +124,32 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
             </Form.Item>
 
             <Form.Item
-              label="порода"
+              label="Пол"
+              name="gender"
+              rules={[{ required: true, message: 'Выберите пол' }]}
+            >
+              <Select
+                options={[
+                  { value: 'male', label: 'кобель' },
+                  { value: 'female', label: 'сука' },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Дата рождения"
+              name="birthdate"
+              rules={[{ required: true, message: "Укажите дату рождения" }]}
+            >
+              <DatePicker
+                style={{ width: 150 }}
+                format="DD.MM.YYYY"
+                placeholder=''
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Порода"
               name="breed"
               rules={[{ required: true, message: 'Введите породу' }]}
             >
@@ -129,15 +157,22 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
             </Form.Item>
 
             <Form.Item
-              label="дата рождения"
-              name="birthdate"
-              rules={[{ required: true }]}
+              label="Окрас"
+              name="color"
+              rules={[{ required: true, message: 'Введите окрас' }]}
             >
-              <DatePicker
-                style={{ width: '100%' }}
-                format="DD.MM.YYYY"
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Клеймо (чип)"
+              name="chip"
+            >
+              <Input
+                placeholder="Если не чипирована, оставьте это поле пустым"
               />
             </Form.Item>
+
           </Form>
         </Col>
       </Row>
