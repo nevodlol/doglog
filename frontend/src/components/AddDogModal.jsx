@@ -1,28 +1,63 @@
-import { useState } from "react";
-import { Modal, Input, DatePicker } from "antd";
-import dayjs from 'dayjs';
+import { useEffect, useState } from "react";
+import { Modal, Form, Input, DatePicker, Row, Col, Upload, message } from "antd";
+import { InboxOutlined, DeleteOutlined } from "@ant-design/icons";
+
+const { Dragger } = Upload;
 
 const AddDogModal = ({ open, onCancel, onSave }) => {
-  const [name, setName] = useState("");
-  const [breed, setBreed] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
 
-  const handleSave = () => {
-    onSave({
-      name,
-      breed,
-      birthdate
-    });
-    setName("");
-    setBreed("");
-    setBirthdate("");
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      setFileList([]);
+    }
+  }, [open, form]);
+
+  const handleSave = async () => {
+    try {
+      const values = await form.validateFields();
+
+      onSave({
+        name: values.name,
+        breed: values.breed,
+        birthdate: values.birthdate ? values.birthdate.format('DD.MM.YYYY') : '',
+        photo: fileList[0]?.originFileObj || null
+      });
+
+      form.resetFields();
+      setFileList([]);
+    } catch (error) {
+      console.log('validation failed:', error);
+    }
   };
 
   const handleCancel = () => {
+    form.resetFields();
+    setFileList([]);
     onCancel();
-    setName("");
-    setBreed("");
-    setBirthdate("");
+  };
+
+  const uploadProps = {
+    fileList,
+    multiple: false,
+    beforeUpload: (file) => {
+      const isImage = file.type.startsWith('image/');
+      if (!isImage) {
+        message.error('можно загружать только картинки');
+        return Upload.LIST_IGNORE;
+      }
+      const isLt5M = file.size / 1024 / 1024 < 10;
+      if (!isLt5M) {
+        message.error('Размер файла не должен превышать 10 мб');
+        return Upload.LIST_IGNORE;
+      }
+      return false;
+    },
+    onChange: ({ fileList: newFileList }) => {
+      setFileList(newFileList.slice(-1));
+    }
   };
 
   return (
@@ -31,32 +66,81 @@ const AddDogModal = ({ open, onCancel, onSave }) => {
       open={open}
       onOk={handleSave}
       onCancel={handleCancel}
+      destroyOnClose={true}
+      width={700}
     >
-      <Input
-        placeholder="Кличка"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        showCount
-        maxLength={20}
-        style={{ marginBottom: 10, marginTop: 21 }}
-      />
+      <Row gutter={24} style={{ marginTop: 10 }}>
+        <Col span={10}>
+          <Dragger {...uploadProps} style={{ height: '100%', minHeight: 280 }}>
+            {fileList.length === 0 ? (
+              <>
+                <p style={{ fontSize: 32, color: '#40a9ff', marginBottom: 8, marginTop: 40 }}>
+                  <InboxOutlined />
+                </p>
+                <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.85)', marginBottom: 4 }}>
+                  Перетащите фото или выберите файл
+                </p>
+                <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
+                  jpg, png до 5 мб
+                </p>
+              </>
+            ) : (
+              <div style={{ position: 'relative', padding: 20, textAlign: 'center' }}>
+                <img
+                  src={URL.createObjectURL(fileList[0].originFileObj)}
+                  alt="preview"
+                  style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8 }}
+                />
+              </div>
+            )}
+          </Dragger>
+          {fileList.length > 0 && (
+            <div
+              onClick={() => setFileList([])}
+              style={{
+                textAlign: 'center',
+                marginTop: 8,
+                color: '#ff4d4f',
+                cursor: 'pointer',
+                fontSize: 12
+              }}
+            >
+              <DeleteOutlined /> Удалить фото
+            </div>
+          )}
+        </Col>
 
-      <Input
-        placeholder="Порода"
-        value={breed}
-        onChange={(e) => setBreed(e.target.value)}
-        style={{ marginBottom: 10 }}
-      />
+        <Col span={14}>
+          <Form form={form} layout="vertical">
+            <Form.Item
+              label="кличка"
+              name="name"
+              rules={[{ required: true, message: 'Введите кличку' }]}
+            >
+              <Input showCount maxLength={20} />
+            </Form.Item>
 
-      <DatePicker
-        style={{ width: 200 }}
-        placeholder="Дата рождения"
-        format="DD.MM.YYYY"
-        value={birthdate ? dayjs(birthdate, 'DD.MM.YYYY') : null}
-        onChange={(date) => {
-          setBirthdate(date ? date.format('DD.MM.YYYY') : '');
-        }}
-      />
+            <Form.Item
+              label="порода"
+              name="breed"
+              rules={[{ required: true, message: 'Введите породу' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="дата рождения"
+              name="birthdate"
+              rules={[{ required: true }]}
+            >
+              <DatePicker
+                style={{ width: '100%' }}
+                format="DD.MM.YYYY"
+              />
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     </Modal>
   );
 };
