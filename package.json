@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "frontend": "cd frontend && npm run dev",
     "backend": "cd backend && uvicorn main:app --reload",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+    "all": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "repository": {
     "type": "git",
