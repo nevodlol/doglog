@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Row, Col, Card, message } from "antd";
 import AddDogModal from "../../components/AddDogModal";
+import DogModal from "../../components/DogModal";
 
 const { Meta } = Card;
 
 function Dashboard() {
   const [dogs, setDogs] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [selectedDog, setSelectedDog] = useState(null);
+  const [openView, setOpenView] = useState(false);
 
   useEffect(() => {
     fetchDogs();
@@ -44,7 +47,7 @@ function Dashboard() {
 
       const newDog = await res.json();
       setDogs([...dogs, newDog]);
-      setOpen(false);
+      setOpenAdd(false);
       message.success("Собака добавлена");
     } catch (err) {
       console.error(err);
@@ -69,6 +72,10 @@ function Dashboard() {
                   />
                 ) : null
               }
+              onClick={() => {
+                setSelectedDog(dog);
+                setOpenView(true);
+              }}
             >
               <Meta title={dog.name} />
             </Card>
@@ -78,7 +85,7 @@ function Dashboard() {
         <Col>
           <Card
             hoverable
-            onClick={() => setOpen(true)}
+            onClick={() => setOpenAdd(true)}
             style={{
               width: 290,
               height: 250,
@@ -100,9 +107,15 @@ function Dashboard() {
       </Row>
 
       <AddDogModal
-        open={open}
-        onCancel={() => setOpen(false)}
+        open={openAdd}
+        onCancel={() => setOpenAdd(false)}
         onSave={handleAddDog}
+      />
+
+      <DogModal
+        open={openView}
+        onCancel={() => setOpenView(false)}
+        dog={selectedDog || {}}
       />
     </>
   );
