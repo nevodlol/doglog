@@ -23,7 +23,7 @@ function LoginPage() {
       </div>
 
       <div className="right">
-        <h1>DogLog</h1>
+        <h1>ДогЛог</h1>
         <p>Система учёта служебных собак</p>
       </div>
     </div>

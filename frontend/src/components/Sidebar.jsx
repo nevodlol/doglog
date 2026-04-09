@@ -54,7 +54,7 @@ function Sidebar() {
           fontFamily: "PT Mono, Consolas, monospace",
         }}
       >
-        DogLog
+        ДогЛог
       </div>
 
       <Menu
