@@ -30,7 +30,7 @@ function Sidebar() {
     {
       key: "/dashboard/trainings",
       icon: <CalendarOutlined />,
-      label: <NavLink to="/dashboard/trainings">Календарь</NavLink>,
+      label: <NavLink to="/dashboard/calendar">Календарь</NavLink>,
     },
     {
       key: "/dashboard/documents",

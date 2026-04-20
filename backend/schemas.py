@@ -3,6 +3,11 @@ from typing import Optional
 from datetime import date
 from enum import Enum
 
+class EventTypeEnum(str, Enum):
+    work = "work"
+    training = "training"
+    vet = "vet"
+
 class GenderEnum(str, Enum):
     male = "male"
     female = "female"
@@ -11,15 +16,39 @@ class DogResponse(BaseModel):
     id: int
     name: str
     gender: GenderEnum
-    birthdate: date
+    birthdate: str
     breed: str
     color: str
     chip: Optional[str]
     photo: Optional[str]
+    weight: Optional[float]
 
-    @field_serializer("birthdate")
-    def serialize_birthdate(self, value: date):
-        return value.strftime("%d.%m.%Y")
+    class Config:
+        from_attributes = True
+
+class CalendarBase(BaseModel):
+    dog_id: int
+    employee: str
+    date: date
+    type: EventTypeEnum
+
+class CalendarCreate(CalendarBase):
+    pass
+
+class DogMini(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class CalendarResponse(BaseModel):
+    id: int
+    dog: DogMini
+    employee: str
+    date: date
+    type: str
 
     class Config:
         from_attributes = True

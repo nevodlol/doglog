@@ -2,9 +2,8 @@ from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import shutil, os
-from datetime import datetime
 from database import SessionLocal
-from models import Dog
+from models import Dog, GenderEnum
 from schemas import DogResponse
 
 router = APIRouter(prefix="/dogs", tags=["dogs"])
@@ -26,18 +25,14 @@ def get_dogs(db: Session = Depends(get_db)):
 @router.post("/", response_model=DogResponse)
 async def create_dog(
     name: str = Form(...),
-    gender: str = Form(...),
-    birthdate: str = Form(...),  # получаем DD.MM.YYYY
+    gender: GenderEnum = Form(...),
+    birthdate: str = Form(...),
     breed: str = Form(...),
     color: str = Form(...),
     chip: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
-    try:
-        birthdate_obj = datetime.strptime(birthdate, "%d.%m.%Y").date()
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Неверный формат даты, используйте DD.MM.YYYY")
 
     file_path = None
     if file:
@@ -48,7 +43,7 @@ async def create_dog(
     new_dog = Dog(
         name=name,
         gender=gender,
-        birthdate=birthdate_obj,
+        birthdate=birthdate,
         breed=breed,
         color=color,
         chip=chip,
@@ -60,3 +55,21 @@ async def create_dog(
     db.refresh(new_dog)
 
     return new_dog
+
+@router.delete("/{dog_id}")
+def delete_dog(dog_id: int, db: Session = Depends(get_db)):
+    dog = db.query(Dog).filter(Dog.id == dog_id).first()
+
+    if not dog:
+        raise HTTPException(status_code=404, detail="Собака не найдена")
+
+    if dog.photo:
+        try:
+            os.remove(dog.photo)
+        except FileNotFoundError:
+            pass
+
+    db.delete(dog)
+    db.commit()
+
+    return {"message": "Собака удалена", "id": dog_id}

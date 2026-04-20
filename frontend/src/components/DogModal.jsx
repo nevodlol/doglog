@@ -1,8 +1,35 @@
-import { Modal, Row, Col } from "antd";
+import { Modal, Row, Col, message } from "antd";
 import moment from "moment";
+import { useState } from "react";
+import axios from "axios";
+import DeleteDogButton from "./DeleteDogButton";
 
-const DogModal = ({ open, onCancel, dog }) => {
+const DogModal = ({ open, onCancel, dog, onDeleted }) => {
   if (!dog) return null;
+
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+
+      await axios.delete(`http://localhost:8000/dogs/${dog.id}`);
+
+      message.success("Собака удалена");
+
+      if (onDeleted) {
+        onDeleted(dog.id);
+      }
+
+      onCancel();
+
+    } catch (err) {
+      console.error(err);
+      message.error("Ошибка удаления");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal
@@ -36,13 +63,35 @@ const DogModal = ({ open, onCancel, dog }) => {
             </div>
           )}
         </Col>
-        <Col span={14} style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 8 }}>
-          <div>Кличка: {dog.name}</div>
-          <div>Пол: {dog.gender === "male" ? "кобель" : "сука"}</div>
-          <div>Дата рождения: {dog.birthdate ? moment(dog.birthdate).format("DD.MM.YYYY") : "не указано"}</div>
-          <div>Порода: {dog.breed}</div>
-          <div>Окрас: {dog.color}</div>
-          {dog.chip && dog.chip.trim() !== "" && <div>Клеймо (чип): {dog.chip}</div>}
+
+        <Col
+          span={14}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            gap: 8,
+          }}
+        >
+          <div><strong>Кличка:</strong> {dog.name}</div>
+          <div><strong>Пол:</strong> {dog.gender === "male" ? "кобель" : "сука"}</div>
+          <div>
+            <strong>Дата рождения:</strong>{" "}
+            {dog.birthdate ? moment(dog.birthdate).format("DD.MM.YYYY") : "не указано"}
+          </div>
+          <div><strong>Порода:</strong> {dog.breed}</div>
+          <div><strong>Окрас:</strong> {dog.color}</div>
+
+          {dog.chip && dog.chip.trim() !== "" && (
+            <div><strong>Клеймо (чип):</strong> {dog.chip}</div>
+          )}
+
+          <div style={{ marginTop: "auto", paddingTop: 16 }}>
+            <DeleteDogButton
+              onDelete={handleDelete}
+              loading={loading}
+            />
+          </div>
         </Col>
       </Row>
     </Modal>

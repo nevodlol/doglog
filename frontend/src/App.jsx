@@ -6,8 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Dashboard from "./pages/dashboard/Dashboard";
-import Trainings from "./pages/dashboard/Trainings";
-import Health from "./pages/dashboard/Health";
+import Calendar from "./pages/dashboard/Calendar";
 import Documents from "./pages/dashboard/Documents";
 
 function App() {
@@ -29,8 +28,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path="trainings" element={<Trainings />} />
-              <Route path="health" element={<Health />} />
+              <Route path="calendar" element={<Calendar />} />
               <Route path="documents" element={<Documents />} />
             </Route>
           </Route>

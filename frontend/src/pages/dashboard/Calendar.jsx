@@ -1,0 +1,170 @@
+import { Tabs, Badge, Modal, Input, Button, Select, Calendar as AntCalendar } from "antd";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+function CalendarPage() {
+  const [events, setEvents] = useState([]);
+  const [dogs, setDogs] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedEvents, setSelectedEvents] = useState([]);
+
+  const [employee, setEmployee] = useState("");
+  const [selectedDog, setSelectedDog] = useState(null);
+  const [activeType, setActiveType] = useState("training");
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/calendar")
+      .then(res => setEvents(res.data));
+
+    axios.get("http://localhost:8000/dogs")
+      .then(res => setDogs(res.data));
+  }, []);
+
+  const eventsByDate = {};
+  events.forEach(e => {
+    if (!eventsByDate[e.date]) {
+      eventsByDate[e.date] = [];
+    }
+    eventsByDate[e.date].push(e);
+  });
+
+  const dateCellRender = (value) => {
+    const date = value.format("YYYY-MM-DD");
+
+    const dayEvents = (eventsByDate[date] || []).filter(
+      e => e.type === activeType
+    );
+
+    return (
+      <ul style={{ padding: 0, margin: 0 }}>
+        {dayEvents.map((event) => (
+          <li key={event.id}>
+            <Badge
+              status="processing"
+              text={`${event.dog.name} • ${event.employee}`}
+            />
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const handleSelect = (value) => {
+    const date = value.format("YYYY-MM-DD");
+
+    const dayEvents = (eventsByDate[date] || []).filter(
+      e => e.type === activeType
+    );
+
+    setSelectedDate(date);
+    setSelectedEvents(dayEvents);
+    setIsModalOpen(true);
+  };
+
+  const handleCreate = () => {
+    if (!selectedDog || !employee || !selectedDate) return;
+
+    axios.post("http://localhost:8000/calendar", {
+      dog_id: selectedDog,
+      employee,
+      date: selectedDate,
+      type: activeType
+    })
+      .then(() => {
+        setIsModalOpen(false);
+        return axios.get("http://localhost:8000/calendar");
+      })
+      .then(res => {
+        setEvents(res.data);
+        setEmployee("");
+        setSelectedDog(null);
+      })
+      .catch(err => {
+        console.log("FULL ERROR:", err);
+        console.log("BACKEND DETAIL:", err.response?.data);
+        console.log("VALIDATION:", JSON.stringify(err.response?.data, null, 2));
+      });
+  };
+  const items = [
+    {
+      key: "work",
+      label: "Служба",
+      children: (
+        <AntCalendar cellRender={dateCellRender} onSelect={handleSelect} />
+      ),
+    },
+    {
+      key: "training",
+      label: "Тренировки",
+      children: (
+        <AntCalendar cellRender={dateCellRender} onSelect={handleSelect} />
+      ),
+    },
+    {
+      key: "vet",
+      label: "Ветеринарные мероприятия",
+      children: (
+        <AntCalendar cellRender={dateCellRender} onSelect={handleSelect} />
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Tabs
+        defaultActiveKey="training"
+        items={items}
+        onChange={(key) => setActiveType(key)}
+      />
+
+      <Modal
+        title={selectedEvents.length === 0 ? "Новое событие" : "Событие"}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsModalOpen(false)}>
+            Отмена
+          </Button>,
+          selectedEvents.length === 0 && (
+            <Button key="submit" type="primary" onClick={handleCreate}>
+              Добавить
+            </Button>
+          )
+        ]}
+      >
+        {selectedEvents.length === 0 ? (
+          <>
+            <Input
+              placeholder="Сотрудник"
+              value={employee}
+              onChange={(e) => setEmployee(e.target.value)}
+              style={{ marginBottom: 10 }}
+            />
+
+            <Select
+              placeholder="Выбери собаку"
+              style={{ width: "100%" }}
+              value={selectedDog}
+              onChange={(value) => setSelectedDog(value)}
+              options={dogs.map(d => ({
+                value: d.id,
+                label: `${d.name} (${d.breed})`
+              }))}
+            />
+          </>
+        ) : (
+          selectedEvents.map(e => (
+            <div key={e.id} style={{ marginBottom: 10 }}>
+              <p><b>Сотрудник:</b> {e.employee}</p>
+              <p><b>Собака:</b> {e.dog.name}</p>
+            </div>
+          ))
+        )}
+      </Modal>
+    </>
+  );
+}
+
+export default CalendarPage;

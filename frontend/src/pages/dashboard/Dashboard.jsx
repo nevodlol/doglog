@@ -55,6 +55,10 @@ function Dashboard() {
     }
   };
 
+  const handleDeleteDog = (id) => {
+    setDogs((prev) => prev.filter((dog) => dog.id !== id));
+
+  };
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -116,6 +120,7 @@ function Dashboard() {
         open={openView}
         onCancel={() => setOpenView(false)}
         dog={selectedDog || {}}
+        onDeleted={handleDeleteDog}
       />
     </>
   );
