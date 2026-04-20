@@ -3,17 +3,18 @@ import moment from "moment";
 import { useState } from "react";
 import axios from "axios";
 import DeleteDogButton from "./DeleteDogButton";
+import { apiUrl, mediaUrl } from "../api";
 
 const DogModal = ({ open, onCancel, dog, onDeleted }) => {
-  if (!dog) return null;
-
   const [loading, setLoading] = useState(false);
+
+  if (!dog) return null;
 
   const handleDelete = async () => {
     try {
       setLoading(true);
 
-      await axios.delete(`http://localhost:8000/dogs/${dog.id}`);
+      await axios.delete(apiUrl(`/dogs/${dog.id}`));
 
       message.success("Собака удалена");
 
@@ -43,7 +44,7 @@ const DogModal = ({ open, onCancel, dog, onDeleted }) => {
         <Col span={10}>
           {dog.photo ? (
             <img
-              src={`http://localhost:8000/${dog.photo}`}
+              src={mediaUrl(dog.photo)}
               alt={dog.name}
               style={{ width: "100%", borderRadius: 8, objectFit: "cover" }}
             />

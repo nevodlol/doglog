@@ -26,6 +26,16 @@ class DogResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class DogUpdate(BaseModel):
+    name: Optional[str] = None
+    gender: Optional[GenderEnum] = None
+    birthdate: Optional[str] = None
+    breed: Optional[str] = None
+    color: Optional[str] = None
+    chip: Optional[str] = None
+    photo: Optional[str] = None
+    weight: Optional[float] = None
+
 class CalendarBase(BaseModel):
     dog_id: int
     employee: str

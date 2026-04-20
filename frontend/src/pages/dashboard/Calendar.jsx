@@ -2,6 +2,7 @@ import { Tabs, Badge, Modal, Input, Button, Select, Calendar as AntCalendar } fr
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DeleteEventButton from "../../components/DeleteEventButton";
+import { apiUrl } from "../../api";
 
 function CalendarPage() {
   const [events, setEvents] = useState([]);
@@ -16,10 +17,10 @@ function CalendarPage() {
   const [activeType, setActiveType] = useState("training");
 
   useEffect(() => {
-    axios.get("http://localhost:8000/calendar")
+    axios.get(apiUrl("/calendar"))
       .then(res => setEvents(res.data));
 
-    axios.get("http://localhost:8000/dogs")
+    axios.get(apiUrl("/dogs/"))
       .then(res => setDogs(res.data));
   }, []);
 
@@ -67,7 +68,7 @@ function CalendarPage() {
   const handleCreate = () => {
     if (!selectedDog || !employee || !selectedDate) return;
 
-    axios.post("http://localhost:8000/calendar", {
+    axios.post(apiUrl("/calendar"), {
       dog_id: selectedDog,
       employee,
       date: selectedDate,
@@ -75,7 +76,7 @@ function CalendarPage() {
     })
       .then(() => {
         setIsModalOpen(false);
-        return axios.get("http://localhost:8000/calendar");
+        return axios.get(apiUrl("/calendar"));
       })
       .then(res => {
         setEvents(res.data);
@@ -90,10 +91,10 @@ function CalendarPage() {
   };
 
   const handleDelete = (id) => {
-    return axios.delete(`http://localhost:8000/calendar/${id}`)
+    return axios.delete(apiUrl(`/calendar/${id}`))
       .then(() => {
         setIsModalOpen(false);
-        return axios.get("http://localhost:8000/calendar");
+        return axios.get(apiUrl("/calendar"));
       })
       .then(res => setEvents(res.data))
       .catch(err => {

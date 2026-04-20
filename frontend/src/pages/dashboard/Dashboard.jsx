@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Row, Col, Card, message } from "antd";
 import AddDogModal from "../../components/AddDogModal";
 import DogModal from "../../components/DogModal";
+import { apiUrl, mediaUrl } from "../../api";
 
 const { Meta } = Card;
 
@@ -17,7 +18,7 @@ function Dashboard() {
 
   const fetchDogs = async () => {
     try {
-      const res = await fetch("http://localhost:8000/dogs/");
+      const res = await fetch(apiUrl("/dogs/"));
       if (!res.ok) throw new Error("Ошибка при загрузке собак");
       const data = await res.json();
       setDogs(data);
@@ -38,7 +39,7 @@ function Dashboard() {
       if (dogData.chip) formData.append("chip", dogData.chip);
       if (dogData.photo) formData.append("file", dogData.photo);
 
-      const res = await fetch("http://localhost:8000/dogs/", {
+      const res = await fetch(apiUrl("/dogs/"), {
         method: "POST",
         body: formData,
       });
@@ -71,7 +72,7 @@ function Dashboard() {
                 dog.photo ? (
                   <img
                     alt={dog.name}
-                    src={`http://localhost:8000/${dog.photo}`}
+                    src={mediaUrl(dog.photo)}
                     style={{ height: 150, objectFit: "cover" }}
                   />
                 ) : null

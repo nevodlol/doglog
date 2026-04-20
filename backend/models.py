@@ -1,17 +1,19 @@
 from sqlalchemy import Column, Integer, String, Enum, Float, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from database import Base
 import enum
-from sqlalchemy.orm import relationship
 
 
 class GenderEnum(enum.Enum):
     male = "male"
     female = "female"
 
+
 class EventTypeEnum(enum.Enum):
     work = "work"
     training = "training"
     vet = "vet"
+
 
 class Dog(Base):
     __tablename__ = "dogs"
@@ -26,6 +28,13 @@ class Dog(Base):
     photo = Column(String, nullable=True)
     weight = Column(Float, nullable=True)
 
+    calendar_events = relationship(
+        "Calendar",
+        back_populates="dog",
+        cascade="all, delete"
+    )
+
+
 class Calendar(Base):
     __tablename__ = "calendar"
 
@@ -35,4 +44,4 @@ class Calendar(Base):
     date = Column(Date, nullable=False)
     type = Column(Enum(EventTypeEnum), nullable=False)
 
-    dog = relationship("Dog")
+    dog = relationship("Dog", back_populates="calendar_events")

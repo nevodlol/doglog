@@ -19,8 +19,7 @@ def get_db():
 
 @router.get("/", response_model=List[CalendarResponse])
 def get_events(db: Session = Depends(get_db)):
-    return db.query(Calendar).all()
-
+    return db.query(Calendar).options(joinedload(Calendar.dog)).all()
 
 @router.post("/", response_model=CalendarResponse)
 def create_event(event: CalendarCreate, db: Session = Depends(get_db)):
