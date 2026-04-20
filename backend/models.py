@@ -31,7 +31,7 @@ class Calendar(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     dog_id = Column(Integer, ForeignKey("dogs.id"), nullable=False)
-    employee = Column(String, nullable=False)
+    employee = Column(String, nullable=True)
     date = Column(Date, nullable=False)
     type = Column(Enum(EventTypeEnum), nullable=False)
 

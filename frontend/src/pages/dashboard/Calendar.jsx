@@ -1,6 +1,7 @@
 import { Tabs, Badge, Modal, Input, Button, Select, Calendar as AntCalendar } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import DeleteEventButton from "../../components/DeleteEventButton";
 
 function CalendarPage() {
   const [events, setEvents] = useState([]);
@@ -87,6 +88,19 @@ function CalendarPage() {
         console.log("VALIDATION:", JSON.stringify(err.response?.data, null, 2));
       });
   };
+
+  const handleDelete = (id) => {
+    return axios.delete(`http://localhost:8000/calendar/${id}`)
+      .then(() => {
+        setIsModalOpen(false);
+        return axios.get("http://localhost:8000/calendar");
+      })
+      .then(res => setEvents(res.data))
+      .catch(err => {
+        console.log("DELETE ERROR:", err.response?.data);
+      });
+  };
+
   const items = [
     {
       key: "work",
@@ -144,7 +158,7 @@ function CalendarPage() {
             />
 
             <Select
-              placeholder="Выбери собаку"
+              placeholder="Собака"
               style={{ width: "100%" }}
               value={selectedDog}
               onChange={(value) => setSelectedDog(value)}
@@ -156,9 +170,32 @@ function CalendarPage() {
           </>
         ) : (
           selectedEvents.map(e => (
-            <div key={e.id} style={{ marginBottom: 10 }}>
-              <p><b>Сотрудник:</b> {e.employee}</p>
-              <p><b>Собака:</b> {e.dog.name}</p>
+            <div
+              key={e.id}
+              style={{
+                marginBottom: 10,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 12
+              }}
+            >
+              <div style={{ lineHeight: "1.4" }}>
+                <div>
+                  <span style={{ fontWeight: 600, marginBottom: 10 }}>Сотрудник:</span>{" "}
+                  <span>{e.employee}</span>
+                </div>
+
+                <div>
+                  <span style={{ fontWeight: 600, marginTop: 10 }}>Собака:</span>{" "}
+                  <span>{e.dog.name}</span>
+                </div>
+              </div>
+
+              <DeleteEventButton
+                loading={false}
+                onDelete={() => handleDelete(e.id)}
+              />
             </div>
           ))
         )}
