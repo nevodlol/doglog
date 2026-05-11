@@ -53,7 +53,7 @@ def download_weights_report(db: Session = Depends(get_db)):
         }
         raw_gender = dog.gender.value if dog.gender else ""
         gender_value = gender_map.get(raw_gender, raw_gender)
-        weight_value = "" if dog.weight is None else f"{dog.weight:.3f}".replace(".", ",")
+        weight_value = "" if dog.weight is None else f'{f"{dog.weight:.3f}".replace(".", ",")} кг'
         rendered = (
             template
             .replace("{dogs.name}", dog.name or "")

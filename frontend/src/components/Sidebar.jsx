@@ -2,7 +2,6 @@ import { Layout, Menu } from "antd";
 import {
   HomeOutlined,
   CalendarOutlined,
-  MedicineBoxOutlined,
   FileTextOutlined,
   LogoutOutlined
 } from "@ant-design/icons";
@@ -11,10 +10,11 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 const { Sider } = Layout;
 
 const siderStyle = {
-  display: "flex",
-  flexDirection: "column",
   height: "100vh",
   position: "fixed",
+  left: 0,
+  top: 0,
+  bottom: 0,
 };
 
 function Sidebar() {
@@ -28,7 +28,7 @@ function Sidebar() {
       label: <NavLink to="/dashboard" end>Главная</NavLink>,
     },
     {
-      key: "/dashboard/trainings",
+      key: "/dashboard/calendar",
       icon: <CalendarOutlined />,
       label: <NavLink to="/dashboard/calendar">Календарь</NavLink>,
     },
@@ -49,33 +49,39 @@ function Sidebar() {
           fontFamily: "PT Mono, Consolas, monospace",
         }}
       >
-        ДогЛог
+        rofl
       </div>
 
+      {/* основной список */}
       <Menu
         theme="dark"
         mode="inline"
         selectedKeys={[location.pathname]}
-        style={{ flex: 1, display: "flex", flexDirection: "column" }}
+        // оставляем место снизу под кнопку выхода
+        style={{ marginBottom: '60px', borderRight: 0 }}
       >
         {items.map(item => (
           <Menu.Item key={item.key} icon={item.icon}>
             {item.label}
           </Menu.Item>
         ))}
-
-        <Menu.Item
-          key="logout"
-          icon={<LogoutOutlined />}
-          style={{ marginTop: "auto" }}
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/login");
-          }}
-        >
-          Выйти
-        </Menu.Item>
       </Menu>
+
+      {/* блок выхода — жестко фиксируем внизу сайдера */}
+      <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+        <Menu theme="dark" mode="inline" selectable={false}>
+          <Menu.Item
+            key="logout"
+            icon={<LogoutOutlined />}
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/login");
+            }}
+          >
+            Выйти
+          </Menu.Item>
+        </Menu>
+      </div>
     </Sider>
   );
 }
