@@ -49,10 +49,9 @@ function Sidebar() {
           fontFamily: "PT Mono, Consolas, monospace",
         }}
       >
-        rofl
+        ДогЛог
       </div>
 
-      {/* основной список */}
       <Menu
         theme="dark"
         mode="inline"
@@ -67,7 +66,6 @@ function Sidebar() {
         ))}
       </Menu>
 
-      {/* блок выхода — жестко фиксируем внизу сайдера */}
       <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
         <Menu theme="dark" mode="inline" selectable={false}>
           <Menu.Item
